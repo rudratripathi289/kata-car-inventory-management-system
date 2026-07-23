@@ -9,7 +9,7 @@ AutoVault is a premium, modern, and highly responsive Car Inventory Management S
 Example admin -- Email:admin@example.com \
                 Password: adminpassword123 \
 example customer -- email:rudratripathi289@gmail.com \
-                     password: RATRIPATHI \
+                     password: RATRIPATHI
 ## 🌟 Features
 
 ### 👤 For Customers:

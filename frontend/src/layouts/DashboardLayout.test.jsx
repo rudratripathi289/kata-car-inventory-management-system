@@ -21,7 +21,7 @@ describe('DashboardLayout', () => {
     );
 
     // Navbar
-    expect(screen.getByText('Car Dealership Admin')).toBeInTheDocument();
+    expect(screen.getByText('AutoVault')).toBeInTheDocument();
     
     // Sidebar
     expect(screen.getByText('Dashboard')).toBeInTheDocument();

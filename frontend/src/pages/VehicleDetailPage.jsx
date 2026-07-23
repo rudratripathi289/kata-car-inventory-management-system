@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getVehicleById, restockVehicle } from '../services/vehicleService';
-import { FiArrowLeft, FiTag, FiCalendar, FiActivity, FiTruck, FiInfo, FiCheck, FiRefreshCw } from 'react-icons/fi';
+import { FiArrowLeft, FiTag, FiCalendar, FiActivity, FiTruck, FiInfo, FiCheck, FiRefreshCw, FiDroplet, FiSettings, FiFileText } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 
 const VehicleDetailPage = () => {
@@ -12,8 +12,10 @@ const VehicleDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [isRestocking, setIsRestocking] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     fetchVehicle();
   }, [id]);
 
@@ -54,22 +56,28 @@ const VehicleDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-20">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-500">Loading vehicle details...</p>
+      <div className="flex flex-col justify-center items-center h-[60vh]">
+        <div className="relative w-20 h-20">
+          <div className="absolute inset-0 rounded-full border-4 border-slate-100"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+          <FiTruck className="absolute inset-0 m-auto h-8 w-8 text-blue-500 animate-pulse" />
         </div>
+        <p className="mt-6 text-slate-500 font-semibold tracking-wide animate-pulse">Loading vehicle details...</p>
       </div>
     );
   }
 
   if (errorMsg || !vehicle) {
     return (
-      <div className="text-center py-20">
-        <p className="text-red-500 text-lg">{errorMsg || 'Vehicle not found'}</p>
+      <div className="flex flex-col items-center justify-center h-[60vh] text-center">
+        <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6">
+          <FiInfo className="h-12 w-12 text-red-500" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-800 mb-2">Oops! Something went wrong</h2>
+        <p className="text-red-500 text-lg mb-8">{errorMsg || 'Vehicle not found'}</p>
         <button 
           onClick={() => navigate('/vehicles')}
-          className="mt-4 text-blue-600 hover:underline"
+          className="px-6 py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20"
         >
           Return to Inventory
         </button>
@@ -78,150 +86,201 @@ const VehicleDetailPage = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-12">
+    <div className={`max-w-6xl mx-auto space-y-8 pb-16 transition-all duration-700 ease-out ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      
+      {/* Top Navigation */}
       <div className="flex items-center">
         <button 
           onClick={() => navigate('/vehicles')}
-          className="mr-4 text-gray-500 hover:text-gray-700 flex items-center transition-colors"
+          className="group flex items-center px-4 py-2 text-sm font-semibold text-slate-500 bg-white border border-slate-200 rounded-xl hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all shadow-sm"
         >
-          <FiArrowLeft className="h-5 w-5 mr-1" /> Back to Inventory
+          <FiArrowLeft className="h-4 w-4 mr-2 transition-transform group-hover:-translate-x-1" /> 
+          Back to Inventory
         </button>
       </div>
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div className="bg-white shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden border border-slate-100">
+        
         {/* Header Section */}
-        <div className="px-4 py-6 sm:px-6 border-b border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {vehicle.year} {vehicle.make} {vehicle.model}
+        <div className="px-8 py-8 sm:px-10 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white flex flex-col md:flex-row md:justify-between md:items-end gap-6 relative overflow-hidden">
+          {/* Decorative background blur */}
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-3">
+              <span className={`px-3 py-1 inline-flex text-xs font-bold uppercase tracking-wider rounded-full shadow-sm ${
+                vehicle.condition === 'New' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-700 border border-slate-200'
+              }`}>
+                {vehicle.condition}
+              </span>
+              <span className="px-3 py-1 inline-flex text-xs font-bold uppercase tracking-wider rounded-full shadow-sm bg-blue-50 text-blue-700 border border-blue-100">
+                {vehicle.category}
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              {`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
             </h1>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              VIN: <span className="font-mono uppercase">{vehicle.vin}</span>
+            <p className="mt-3 text-sm text-slate-500 font-medium flex items-center">
+              <FiInfo className="mr-1.5 h-4 w-4" /> VIN: <span className="font-mono uppercase ml-1 bg-slate-100 px-2 py-0.5 rounded text-slate-700">{vehicle.vin}</span>
             </p>
           </div>
-          <div className="mt-4 md:mt-0 flex items-center gap-4">
-            <span className="text-3xl font-extrabold text-blue-600">${vehicle.price.toLocaleString()}</span>
+          
+          <div className="relative z-10 flex flex-col items-start md:items-end">
+            <p className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Listed Price</p>
+            <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500">
+              ${vehicle.price.toLocaleString()}
+            </span>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col lg:flex-row">
+          
           {/* Image Section */}
-          <div className="md:w-1/2 p-6 bg-gray-50 flex items-center justify-center border-b md:border-b-0 md:border-r border-gray-200">
+          <div className="lg:w-1/2 p-8 lg:p-12 bg-slate-50/50 flex items-center justify-center border-b lg:border-b-0 lg:border-r border-slate-100 relative group">
             {vehicle.imageUrl ? (
-              <img 
-                src={vehicle.imageUrl} 
-                alt={`${vehicle.make} ${vehicle.model}`} 
-                className="w-full h-auto rounded-lg shadow-sm object-cover max-h-96"
-              />
+              <div className="relative w-full aspect-video md:aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl shadow-slate-300/50">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent z-10"></div>
+                <img 
+                  src={vehicle.imageUrl} 
+                  alt={`${vehicle.make} ${vehicle.model}`} 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
             ) : (
-              <div className="text-center text-gray-400 py-20">
-                <FiTruck className="mx-auto h-16 w-16 mb-4 opacity-50" />
-                <p>No image available</p>
+              <div className="w-full aspect-video md:aspect-[4/3] rounded-2xl bg-white border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400">
+                <FiTruck className="h-16 w-16 mb-4 opacity-30" />
+                <p className="font-medium">No image available</p>
               </div>
             )}
           </div>
 
           {/* Details Section */}
-          <div className="md:w-1/2 px-4 py-5 sm:p-0">
-            <dl className="sm:divide-y sm:divide-gray-200">
-              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500 flex items-center">
-                  <FiTag className="mr-2" /> Condition
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    vehicle.condition === 'New' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {vehicle.condition}
-                  </span>
-                </dd>
+          <div className="lg:w-1/2 flex flex-col h-full">
+            <div className="p-8 sm:p-10 flex-1">
+              <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mr-3">
+                  <FiSettings className="w-4 h-4" />
+                </div>
+                Key Specifications
+              </h3>
+              
+              <div className="grid grid-cols-2 gap-x-8 gap-y-8">
+                
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mt-1 bg-slate-100 p-2 rounded-lg text-slate-500">
+                    <FiActivity className="h-5 w-5" />
+                  </div>
+                  <div className="ml-4">
+                    <dt className="text-xs font-bold text-slate-400 uppercase tracking-wider">Mileage</dt>
+                    <dd className="mt-1 text-base font-bold text-slate-800">{vehicle.mileage.toLocaleString()} miles</dd>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mt-1 bg-slate-100 p-2 rounded-lg text-slate-500">
+                    <FiInfo className="h-5 w-5" />
+                  </div>
+                  <div className="ml-4">
+                    <dt className="text-xs font-bold text-slate-400 uppercase tracking-wider">Engine</dt>
+                    <dd className="mt-1 text-base font-bold text-slate-800">{vehicle.engine}</dd>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mt-1 bg-slate-100 p-2 rounded-lg text-slate-500">
+                    <FiSettings className="h-5 w-5" />
+                  </div>
+                  <div className="ml-4">
+                    <dt className="text-xs font-bold text-slate-400 uppercase tracking-wider">Transmission</dt>
+                    <dd className="mt-1 text-base font-bold text-slate-800">{vehicle.transmission}</dd>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mt-1 bg-slate-100 p-2 rounded-lg text-slate-500">
+                    <FiDroplet className="h-5 w-5" />
+                  </div>
+                  <div className="ml-4">
+                    <dt className="text-xs font-bold text-slate-400 uppercase tracking-wider">Fuel Type</dt>
+                    <dd className="mt-1 text-base font-bold text-slate-800">{vehicle.fuelType}</dd>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mt-1 bg-slate-100 p-2 rounded-lg text-slate-500">
+                    <FiTag className="h-5 w-5" />
+                  </div>
+                  <div className="ml-4">
+                    <dt className="text-xs font-bold text-slate-400 uppercase tracking-wider">Color</dt>
+                    <dd className="mt-1 text-base font-bold text-slate-800">{vehicle.color}</dd>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 mt-1 bg-slate-100 p-2 rounded-lg text-slate-500">
+                    <FiCheck className="h-5 w-5" />
+                  </div>
+                  <div className="ml-4">
+                    <dt className="text-xs font-bold text-slate-400 uppercase tracking-wider">Stock Status</dt>
+                    <dd className="mt-1">
+                      {vehicle.quantity > 0 
+                        ? <span className="inline-flex items-center text-emerald-600 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-md"><FiCheck className="mr-1.5 h-4 w-4"/> {vehicle.quantity} available</span>
+                        : <span className="inline-flex items-center text-red-600 font-bold bg-red-50 px-2.5 py-0.5 rounded-md"><FiInfo className="mr-1.5 h-4 w-4"/> Out of stock</span>
+                      }
+                    </dd>
+                  </div>
+                </div>
+
               </div>
-              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500 flex items-center">
-                  <FiActivity className="mr-2" /> Mileage
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {vehicle.mileage.toLocaleString()} miles
-                </dd>
-              </div>
-              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500 flex items-center">
-                  <FiInfo className="mr-2" /> Engine
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {vehicle.engine}
-                </dd>
-              </div>
-              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500 flex items-center">
-                  <FiInfo className="mr-2" /> Transmission
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {vehicle.transmission}
-                </dd>
-              </div>
-              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500 flex items-center">
-                  <FiInfo className="mr-2" /> Fuel Type
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {vehicle.fuelType}
-                </dd>
-              </div>
-              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500 flex items-center">
-                  <FiInfo className="mr-2" /> Color
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {vehicle.color}
-                </dd>
-              </div>
-              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500 flex items-center">
-                  <FiCheck className="mr-2" /> Stock Status
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {vehicle.quantity > 0 
-                    ? <span className="text-green-600 font-medium">{vehicle.quantity} available</span>
-                    : <span className="text-red-600 font-medium">Out of stock</span>
-                  }
-                </dd>
-              </div>
-            </dl>
+            </div>
             
-            <div className="px-6 py-5 mt-2 flex flex-col sm:flex-row justify-end md:justify-start gap-4">
-              <button
-                onClick={() => navigate(`/vehicles/${vehicle._id}/purchase`)}
-                disabled={vehicle.quantity <= 0}
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Buy Now
-              </button>
+            {/* Action Buttons Footer */}
+            <div className="px-8 py-6 sm:px-10 border-t border-slate-100 bg-slate-50/80 flex flex-col sm:flex-row justify-end gap-4 mt-auto">
               
               {user?.role === 'admin' && (
                 <button
                   onClick={handleRestock}
                   disabled={isRestocking}
-                  className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 border border-slate-300 shadow-sm text-sm font-bold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-blue-600 hover:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all disabled:opacity-50"
                 >
                   <FiRefreshCw className={`mr-2 h-5 w-5 ${isRestocking ? 'animate-spin' : ''}`} />
                   {isRestocking ? 'Restocking...' : 'Restock'}
                 </button>
               )}
+
+              <button
+                onClick={() => navigate(`/vehicles/${vehicle._id}/purchase`)}
+                disabled={vehicle.quantity <= 0}
+                className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 border border-transparent shadow-md shadow-emerald-500/20 text-sm font-bold rounded-xl text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 disabled:opacity-50 disabled:pointer-events-none transition-all"
+              >
+                Buy Now
+              </button>
+              
             </div>
           </div>
         </div>
       </div>
 
       {/* Description & Features Section */}
-      <div className="bg-white shadow sm:rounded-lg overflow-hidden">
-        <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Vehicle Description</h3>
+      <div className="bg-white shadow-xl shadow-slate-200/40 rounded-3xl overflow-hidden border border-slate-100">
+        <div className="px-8 py-6 sm:px-10 border-b border-slate-100 bg-slate-50/50">
+          <h3 className="text-lg font-bold text-slate-800 flex items-center">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mr-3">
+              <FiFileText className="w-4 h-4" />
+            </div>
+            Vehicle Description
+          </h3>
         </div>
-        <div className="px-4 py-5 sm:p-6">
-          <p className="text-gray-700 whitespace-pre-wrap">
-            {vehicle.description || 'No description provided for this vehicle.'}
-          </p>
+        <div className="px-8 py-8 sm:px-10">
+          <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed text-base">
+            {vehicle.description ? (
+              vehicle.description.split('\n').map((paragraph, idx) => (
+                <p key={idx} className="mb-4 last:mb-0">{paragraph}</p>
+              ))
+            ) : (
+              <p className="italic text-slate-400">No description provided for this vehicle.</p>
+            )}
+          </div>
         </div>
       </div>
       

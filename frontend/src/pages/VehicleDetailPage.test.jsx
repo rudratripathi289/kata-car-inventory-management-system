@@ -23,6 +23,27 @@ describe('VehicleDetailPage', () => {
     );
   };
 
+  const mockVehicle = {
+    data: {
+      _id: '1',
+      vin: '1HGCM82',
+      make: 'Toyota',
+      model: 'Camry',
+      year: 2023,
+      price: 25000,
+      quantity: 5,
+      condition: 'New',
+      category: 'Sedan',
+      fuelType: 'Gasoline',
+      transmission: 'Automatic',
+      color: 'Silver',
+      mileage: 100,
+      engine: '2.5L 4-Cylinder',
+      description: 'A great car.',
+      features: ['Bluetooth', 'Backup Camera']
+    }
+  };
+
   it('renders loading state initially', () => {
     vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'user' } });
     vi.mocked(vehicleService.getVehicleById).mockReturnValue(new Promise(() => {}));
@@ -34,28 +55,6 @@ describe('VehicleDetailPage', () => {
 
   it('renders vehicle details after successful fetch', async () => {
     vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'user' } });
-    
-    const mockVehicle = {
-      data: {
-        _id: '1',
-        vin: '1HGCM82',
-        make: 'Toyota',
-        model: 'Camry',
-        year: 2023,
-        price: 25000,
-        quantity: 5,
-        condition: 'New',
-        category: 'Sedan',
-        fuelType: 'Gasoline',
-        transmission: 'Automatic',
-        color: 'Silver',
-        mileage: 100,
-        engine: '2.5L 4-Cylinder',
-        description: 'A great car.',
-        features: ['Bluetooth', 'Backup Camera']
-      }
-    };
-    
     vi.mocked(vehicleService.getVehicleById).mockResolvedValue(mockVehicle);
 
     renderWithRouter();
@@ -79,6 +78,51 @@ describe('VehicleDetailPage', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Failed to load vehicle details')).toBeInTheDocument();
+    });
+  });
+
+  it('shows restock button for admin', async () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'admin' } });
+    vi.mocked(vehicleService.getVehicleById).mockResolvedValue(mockVehicle);
+
+    renderWithRouter();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /restock/i })).toBeInTheDocument();
+    });
+  });
+
+  it('handles restock successfully', async () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'admin' } });
+    vi.mocked(vehicleService.getVehicleById).mockResolvedValue(mockVehicle);
+    vi.mocked(vehicleService.restockVehicle).mockResolvedValue({ data: { message: 'Restocked' } });
+
+    renderWithRouter();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /restock/i })).toBeInTheDocument();
+    });
+
+    // Mock window.prompt
+    vi.stubGlobal('prompt', vi.fn().mockReturnValue('10'));
+
+    const { fireEvent } = require('@testing-library/react');
+    fireEvent.click(screen.getByRole('button', { name: /restock/i }));
+
+    await waitFor(() => {
+      expect(window.prompt).toHaveBeenCalledWith('Enter quantity to restock:', '1');
+      expect(vehicleService.restockVehicle).toHaveBeenCalledWith('1', 10);
+    });
+  });
+
+  it('hides restock button for normal users', async () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'user' } });
+    vi.mocked(vehicleService.getVehicleById).mockResolvedValue(mockVehicle);
+
+    renderWithRouter();
+
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /restock/i })).not.toBeInTheDocument();
     });
   });
 });

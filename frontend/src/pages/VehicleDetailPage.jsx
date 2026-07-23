@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getVehicleById } from '../services/vehicleService';
-import { FiArrowLeft, FiTag, FiCalendar, FiActivity, FiTruck, FiInfo, FiCheck } from 'react-icons/fi';
+import { getVehicleById, restockVehicle } from '../services/vehicleService';
+import { FiArrowLeft, FiTag, FiCalendar, FiActivity, FiTruck, FiInfo, FiCheck, FiRefreshCw } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 
 const VehicleDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [vehicle, setVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isRestocking, setIsRestocking] = useState(false);
 
   useEffect(() => {
     fetchVehicle();
@@ -24,6 +27,28 @@ const VehicleDetailPage = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRestock = async () => {
+    const quantityStr = window.prompt('Enter quantity to restock:', '1');
+    if (!quantityStr) return; // User cancelled
+    
+    const quantity = parseInt(quantityStr, 10);
+    if (isNaN(quantity) || quantity <= 0) {
+      alert('Please enter a valid positive number');
+      return;
+    }
+
+    try {
+      setIsRestocking(true);
+      await restockVehicle(id, quantity);
+      // Refresh vehicle data
+      await fetchVehicle();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to restock vehicle');
+    } finally {
+      setIsRestocking(false);
     }
   };
 
@@ -74,7 +99,7 @@ const VehicleDetailPage = () => {
               VIN: <span className="font-mono uppercase">{vehicle.vin}</span>
             </p>
           </div>
-          <div className="mt-4 md:mt-0">
+          <div className="mt-4 md:mt-0 flex items-center gap-4">
             <span className="text-3xl font-extrabold text-blue-600">${vehicle.price.toLocaleString()}</span>
           </div>
         </div>
@@ -164,14 +189,25 @@ const VehicleDetailPage = () => {
               </div>
             </dl>
             
-            <div className="px-6 py-5 mt-2 flex justify-end md:justify-start">
+            <div className="px-6 py-5 mt-2 flex flex-col sm:flex-row justify-end md:justify-start gap-4">
               <button
                 onClick={() => navigate(`/vehicles/${vehicle._id}/purchase`)}
                 disabled={vehicle.quantity <= 0}
-                className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center justify-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Buy Now
               </button>
+              
+              {user?.role === 'admin' && (
+                <button
+                  onClick={handleRestock}
+                  disabled={isRestocking}
+                  className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <FiRefreshCw className={`mr-2 h-5 w-5 ${isRestocking ? 'animate-spin' : ''}`} />
+                  {isRestocking ? 'Restocking...' : 'Restock'}
+                </button>
+              )}
             </div>
           </div>
         </div>

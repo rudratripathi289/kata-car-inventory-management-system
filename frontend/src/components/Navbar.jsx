@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FiLogOut, FiUser } from 'react-icons/fi';
 
@@ -12,10 +12,13 @@ const Navbar = () => {
       </div>
       
       <div className="flex items-center space-x-4">
-        <div className="flex items-center text-gray-700">
+        <Link 
+          to="/profile"
+          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors cursor-pointer"
+        >
           <FiUser className="mr-2" />
           <span className="font-medium">{user?.firstName} {user?.lastName}</span>
-        </div>
+        </Link>
         <button 
           onClick={logout}
           className="flex items-center text-red-600 hover:text-red-800 transition-colors"

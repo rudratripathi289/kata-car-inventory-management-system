@@ -1,5 +1,19 @@
 # Test Results
 
+## 1. Initial Test Run (First Time Ran Tests)
+
+```text
+Test Suites: 5 failed, 5 total
+Tests:       25 failed, 19 passed, 44 total
+Snapshots:   0 total
+Time:        13.848 s
+Ran all test suites.
+```
+
+---
+
+## 2. Final Test Run (All Tests Passed)
+
 All tests have successfully passed for the Car Dealership Inventory System backend. 
 
 ```text
@@ -19,7 +33,10 @@ Time:        6.951 s
 Ran all test suites.
 ```
 
+---
+
 ## Summary of Tests Performed
+
 1. **Authentication Tests** (`auth.test.js`):
    - User registration (success & error cases)
    - User login (success & error cases)

@@ -59,9 +59,9 @@ const ProfilePage = () => {
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
             
-            <div className="px-6 py-8 relative z-10 text-center border-b border-slate-100 bg-white/50 backdrop-blur-sm">
-              <div className="mx-auto h-24 w-24 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 mb-4 transform group-hover:scale-105 transition-transform duration-300">
-                <FiUser className="h-10 w-10" />
+            <div className="px-8 py-10 relative z-10 text-center border-b border-slate-100 bg-white/50 backdrop-blur-sm">
+              <div className="mx-auto h-32 w-32 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 mb-6 transform group-hover:scale-105 transition-transform duration-300">
+                <FiUser className="h-14 w-14" />
               </div>
               <h3 className="text-xl font-extrabold text-slate-900">{`${user.firstName} ${user.lastName}`}</h3>
               <p className="text-slate-500 text-sm mt-1">{user.email}</p>
@@ -74,8 +74,8 @@ const ProfilePage = () => {
               </div>
             </div>
             
-            <div className="px-6 py-6 bg-slate-50/50">
-              <dl className="space-y-4">
+            <div className="px-8 py-8 bg-slate-50/50">
+              <dl className="space-y-6">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 mt-1">
                     <FiUser className="h-5 w-5 text-slate-400" />
@@ -146,14 +146,14 @@ const ProfilePage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="bg-white overflow-hidden shadow-xl shadow-slate-200/40 rounded-3xl border border-slate-100 group relative transition-all hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
-              <div className="p-6 relative z-10">
+              <div className="p-8 sm:p-10 relative z-10">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-emerald-100/50 p-4 rounded-2xl text-emerald-600">
-                    <FiDollarSign className="h-7 w-7" />
+                  <div className="flex-shrink-0 bg-emerald-100/50 p-5 rounded-2xl text-emerald-600">
+                    <FiDollarSign className="h-8 w-8" />
                   </div>
-                  <div className="ml-5 w-0 flex-1">
+                  <div className="ml-6 w-0 flex-1">
                     <dt className="text-sm font-bold text-slate-500 uppercase tracking-wider truncate">Total Expense</dt>
-                    <dd className="text-3xl font-extrabold text-slate-900 mt-1">
+                    <dd className="text-4xl font-extrabold text-slate-900 mt-2">
                       ${totalExpense.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </dd>
                   </div>
@@ -163,14 +163,14 @@ const ProfilePage = () => {
 
             <div className="bg-white overflow-hidden shadow-xl shadow-slate-200/40 rounded-3xl border border-slate-100 group relative transition-all hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full blur-3xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700"></div>
-              <div className="p-6 relative z-10">
+              <div className="p-8 sm:p-10 relative z-10">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-indigo-100/50 p-4 rounded-2xl text-indigo-600">
-                    <FiTruck className="h-7 w-7" />
+                  <div className="flex-shrink-0 bg-indigo-100/50 p-5 rounded-2xl text-indigo-600">
+                    <FiTruck className="h-8 w-8" />
                   </div>
-                  <div className="ml-5 w-0 flex-1">
+                  <div className="ml-6 w-0 flex-1">
                     <dt className="text-sm font-bold text-slate-500 uppercase tracking-wider truncate">Owned Cars</dt>
-                    <dd className="text-3xl font-extrabold text-slate-900 mt-1">{totalOwnedCars}</dd>
+                    <dd className="text-4xl font-extrabold text-slate-900 mt-2">{totalOwnedCars}</dd>
                   </div>
                 </div>
               </div>

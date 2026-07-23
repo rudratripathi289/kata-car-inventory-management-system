@@ -1,12 +1,15 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiHome, FiList, FiPlusSquare, FiSettings, FiUser } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
 
 const Sidebar = () => {
+  const { user } = useAuth();
+  
   const links = [
     { name: 'Dashboard', path: '/dashboard', icon: FiHome },
     { name: 'Inventory', path: '/vehicles', icon: FiList },
-    { name: 'Add Vehicle', path: '/vehicles/new', icon: FiPlusSquare },
+    ...(user?.role === 'admin' ? [{ name: 'Add Vehicle', path: '/vehicles/new', icon: FiPlusSquare }] : []),
     { name: 'My Profile', path: '/profile', icon: FiUser },
     { name: 'Settings', path: '/settings', icon: FiSettings },
   ];

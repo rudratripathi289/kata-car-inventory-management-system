@@ -231,7 +231,7 @@ const DashboardPage = () => {
             )}
             {lowStockVehicles.length > 4 && (
               <div className="mt-4 text-center">
-                <Link to="/vehicles" className="text-sm text-blue-600 hover:text-blue-800">
+                <Link to="/vehicles?stock=low" className="text-sm text-blue-600 hover:text-blue-800">
                   + {lowStockVehicles.length - 4} more low stock vehicles in inventory
                 </Link>
               </div>

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { searchVehicles } from '../services/vehicleService';
+import { searchVehicles, getVehicles } from '../services/vehicleService';
 import { FiPlus, FiSearch, FiFilter } from 'react-icons/fi';
 
 const VehiclesPage = () => {
   const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isLowStock = searchParams.get('stock') === 'low';
+
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -19,15 +22,41 @@ const VehiclesPage = () => {
   
   useEffect(() => {
     fetchVehicles(currentPage);
-  }, [currentPage]); 
+  }, [currentPage, isLowStock]); 
 
   const fetchVehicles = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await searchVehicles({ make: searchTerm, page, limit }); 
-      setVehicles(response.data.vehicles);
-      setTotalPages(response.data.pages);
-      setTotalItems(response.data.total);
+      
+      if (isLowStock) {
+        // Client-side filtering for low stock since backend doesn't support it directly
+        const response = await getVehicles();
+        let allVehicles = response.data;
+        
+        // Filter by make (if searching) and low stock
+        if (searchTerm) {
+          allVehicles = allVehicles.filter(v => v.make.toLowerCase().includes(searchTerm.toLowerCase()));
+        }
+        allVehicles = allVehicles.filter(v => v.quantity < 3);
+        
+        const total = allVehicles.length;
+        const pages = Math.ceil(total / limit);
+        
+        // Manual pagination
+        const startIndex = (page - 1) * limit;
+        const paginatedVehicles = allVehicles.slice(startIndex, startIndex + limit);
+        
+        setVehicles(paginatedVehicles);
+        setTotalPages(pages || 1);
+        setTotalItems(total);
+      } else {
+        // Normal server-side search/pagination
+        const response = await searchVehicles({ make: searchTerm, page, limit }); 
+        setVehicles(response.data.vehicles);
+        setTotalPages(response.data.pages);
+        setTotalItems(response.data.total);
+      }
+      
       setError('');
     } catch (err) {
       console.error(err);

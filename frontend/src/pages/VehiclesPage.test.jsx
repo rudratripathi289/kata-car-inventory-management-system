@@ -122,4 +122,36 @@ describe('VehiclesPage', () => {
       expect(screen.queryByRole('link', { name: /add vehicle/i })).not.toBeInTheDocument();
     });
   });
+
+  it('handles low stock filter from URL parameters', async () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'user' } });
+    
+    const mockAllVehicles = {
+      data: [
+        { _id: '1', make: 'Toyota', model: 'Camry', year: 2023, price: 25000, quantity: 5, condition: 'New' },
+        { _id: '2', make: 'Honda', model: 'Accord', year: 2024, price: 28000, quantity: 2, condition: 'New' },
+        { _id: '3', make: 'Ford', model: 'Mustang', year: 2022, price: 35000, quantity: 1, condition: 'Used' },
+      ]
+    };
+    
+    vi.mocked(vehicleService.getVehicles).mockResolvedValue(mockAllVehicles);
+
+    render(
+      <MemoryRouter initialEntries={['/vehicles?stock=low']}>
+        <VehiclesPage />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      // Honda and Ford have quantity < 3, so they should be rendered
+      expect(screen.getByText('Honda')).toBeInTheDocument();
+      expect(screen.getByText('Ford')).toBeInTheDocument();
+      
+      // Toyota has quantity 5, so it should NOT be rendered
+      expect(screen.queryByText('Toyota')).not.toBeInTheDocument();
+    });
+    
+    // Make sure getVehicles was called instead of searchVehicles
+    expect(vehicleService.getVehicles).toHaveBeenCalled();
+  });
 });

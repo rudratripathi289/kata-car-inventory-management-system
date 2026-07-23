@@ -49,7 +49,9 @@ describe('VehiclesPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Toyota Camry')).toBeInTheDocument();
+      expect(screen.getByText('Toyota')).toBeInTheDocument();
+      expect(screen.getByText('Camry')).toBeInTheDocument();
+      expect(screen.getByText('2023')).toBeInTheDocument();
     });
     expect(screen.getByText('$25000')).toBeInTheDocument();
     expect(screen.queryByText(/loading vehicles/i)).not.toBeInTheDocument();
@@ -79,7 +81,7 @@ describe('VehiclesPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Toyota Camry')).toBeInTheDocument();
+      expect(screen.getByText('Toyota')).toBeInTheDocument();
     });
 
     const nextButton = screen.getByRole('button', { name: /next/i });

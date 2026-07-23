@@ -5,7 +5,8 @@ const app = express();
 app.use(express.json());
 
 // Routes
-// TODO: Mount routes here (e.g., app.use('/api/auth', authRoutes))
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

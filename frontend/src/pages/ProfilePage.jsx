@@ -173,9 +173,9 @@ const ProfilePage = () => {
               <p className="text-gray-500">You haven't purchased any vehicles yet.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-96 overflow-y-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 sticky top-0 shadow-sm z-10">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
@@ -188,7 +188,7 @@ const ProfilePage = () => {
                   {purchases.map((purchase) => (
                     <tr key={purchase._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(purchase.purchasedAt).toLocaleDateString()}
+                        {purchase.purchasedAt ? new Date(purchase.purchasedAt).toLocaleDateString() : (purchase.createdAt ? new Date(purchase.createdAt).toLocaleDateString() : '-')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {purchase.vehicleId ? `${purchase.vehicleId.year} ${purchase.vehicleId.make} ${purchase.vehicleId.model}` : 'Unknown Vehicle'}
@@ -200,7 +200,7 @@ const ProfilePage = () => {
                         {purchase.vehicleId ? `$${purchase.vehicleId.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '-'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        ${purchase.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ${purchase.totalPrice ? purchase.totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
                       </td>
                     </tr>
                   ))}

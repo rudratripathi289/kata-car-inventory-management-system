@@ -24,3 +24,18 @@
  Test Files  4 passed (4)
       Tests  10 passed (10)
 ```
+
+## Dashboard
+**Date:** 2026-07-23
+
+### Test Files
+- `src/layouts/DashboardLayout.test.jsx`
+  - renders Navbar, Sidebar, Footer, and children
+- `src/pages/DashboardPage.test.jsx`
+  - renders dashboard cards and welcome message
+
+### Result
+```text
+ Test Files  6 passed (6)
+      Tests  12 passed (12)
+```

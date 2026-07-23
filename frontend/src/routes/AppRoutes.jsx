@@ -4,21 +4,8 @@ import RegisterPage from '../pages/RegisterPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useAuth } from '../context/AuthContext';
 
-const TempDashboard = () => {
-  const { user, logout } = useAuth();
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <p>Welcome, {user?.firstName}!</p>
-      <button 
-        onClick={logout}
-        className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-      >
-        Logout
-      </button>
-    </div>
-  );
-};
+import DashboardPage from '../pages/DashboardPage';
+import DashboardLayout from '../layouts/DashboardLayout';
 
 const TempHome = () => (
   <div className="p-8">
@@ -41,7 +28,9 @@ function AppRoutes() {
         path="/dashboard" 
         element={
           <ProtectedRoute>
-            <TempDashboard />
+            <DashboardLayout>
+              <DashboardPage />
+            </DashboardLayout>
           </ProtectedRoute>
         } 
       />

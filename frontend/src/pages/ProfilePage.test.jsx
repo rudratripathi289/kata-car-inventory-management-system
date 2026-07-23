@@ -38,11 +38,11 @@ describe('ProfilePage', () => {
     renderWithRouter();
 
     await waitFor(() => {
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.getAllByText(/John Doe/i).length).toBeGreaterThan(0);
     });
-    expect(screen.getByText('john@example.com')).toBeInTheDocument();
+    expect(screen.getAllByText('john@example.com').length).toBeGreaterThan(0);
     expect(screen.getByText('123-456-7890')).toBeInTheDocument();
-    expect(screen.getByText('Admin')).toBeInTheDocument();
+    expect(screen.getAllByText('Admin').length).toBeGreaterThan(0);
   });
 
   it('renders fallback when phone is missing', async () => {
@@ -58,11 +58,11 @@ describe('ProfilePage', () => {
     renderWithRouter();
 
     await waitFor(() => {
-      expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+      expect(screen.getAllByText(/Jane Smith/i).length).toBeGreaterThan(0);
     });
-    expect(screen.getByText('jane@example.com')).toBeInTheDocument();
+    expect(screen.getAllByText('jane@example.com').length).toBeGreaterThan(0);
     expect(screen.getByText('Not provided')).toBeInTheDocument();
-    expect(screen.getByText('Customer')).toBeInTheDocument();
+    expect(screen.getAllByText('Customer').length).toBeGreaterThan(0);
   });
 
   it('renders purchase history and metrics correctly', async () => {

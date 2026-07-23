@@ -8,6 +8,7 @@ const {
   deleteVehicle,
   searchVehicles,
 } = require('../controllers/vehicleController');
+const { purchaseVehicle } = require('../controllers/purchaseController');
 const { body } = require('express-validator');
 const protect = require('../middleware/authMiddleware');
 const admin = require('../middleware/adminMiddleware');
@@ -40,5 +41,13 @@ router.route('/:id')
   .get(getVehicleById)
   .put(protect, admin, vehicleValidation, updateVehicle)
   .delete(protect, admin, deleteVehicle);
+
+// Purchase route
+router.post(
+  '/:id/purchase',
+  protect,
+  [body('quantity', 'Quantity is required and must be at least 1').isInt({ min: 1 })],
+  purchaseVehicle
+);
 
 module.exports = router;

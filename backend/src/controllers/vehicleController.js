@@ -158,6 +158,33 @@ const searchVehicles = async (req, res, next) => {
   }
 };
 
+// @desc    Restock a vehicle
+// @route   POST /api/vehicles/:id/restock
+// @access  Private/Admin
+const restockVehicle = async (req, res, next) => {
+  try {
+    const { quantity } = req.body;
+    const vehicleId = req.params.id;
+
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ message: 'Quantity must be greater than zero' });
+    }
+
+    const vehicle = await Vehicle.findById(vehicleId);
+
+    if (!vehicle) {
+      return res.status(404).json({ message: 'Vehicle not found' });
+    }
+
+    vehicle.quantity += quantity;
+    await vehicle.save();
+
+    res.status(200).json({ message: 'Restock successful', vehicle });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getVehicles,
   getVehicleById,
@@ -165,4 +192,5 @@ module.exports = {
   updateVehicle,
   deleteVehicle,
   searchVehicles,
+  restockVehicle,
 };

@@ -7,6 +7,7 @@ const {
   updateVehicle,
   deleteVehicle,
   searchVehicles,
+  restockVehicle,
 } = require('../controllers/vehicleController');
 const { purchaseVehicle } = require('../controllers/purchaseController');
 const { body } = require('express-validator');
@@ -48,6 +49,15 @@ router.post(
   protect,
   [body('quantity', 'Quantity is required and must be at least 1').isInt({ min: 1 })],
   purchaseVehicle
+);
+
+// Restock route
+router.post(
+  '/:id/restock',
+  protect,
+  admin,
+  [body('quantity', 'Quantity is required and must be at least 1').isInt({ min: 1 })],
+  restockVehicle
 );
 
 module.exports = router;

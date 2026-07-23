@@ -6,25 +6,7 @@ const User = require('../models/User');
 const Vehicle = require('../models/Vehicle');
 const jwt = require('jsonwebtoken');
 
-let mongoServer;
-
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
-  process.env.JWT_SECRET = 'test_jwt_secret_key_for_testing_only';
-});
-
-afterEach(async () => {
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    await collections[key].deleteMany({});
-  }
-});
-
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
+// Setup is handled by src/tests/setup.js
 
 // Helper: create user and get token
 const createUserAndGetToken = async (role = 'customer') => {

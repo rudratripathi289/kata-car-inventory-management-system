@@ -6,25 +6,7 @@ const User = require('../models/User');
 // We test the middleware functions directly by mocking req, res, next
 // The middleware files don't exist yet — this is TDD (Red phase)
 
-let mongoServer;
-
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
-  process.env.JWT_SECRET = 'test_jwt_secret_key_for_testing_only';
-});
-
-afterEach(async () => {
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    await collections[key].deleteMany({});
-  }
-});
-
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
+// Setup is handled by src/tests/setup.js
 
 // Lazy-require so the test file can be written before the source
 const getAuthMiddleware = () => require('../middleware/authMiddleware');

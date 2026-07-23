@@ -63,7 +63,7 @@ const updateVehicle = async (req, res, next) => {
     }
 
     const vehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     });
 

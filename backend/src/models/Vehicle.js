@@ -81,7 +81,6 @@ const vehicleSchema = new mongoose.Schema(
 );
 
 // Indexes for faster searching
-vehicleSchema.index({ vin: 1 });
 vehicleSchema.index({ make: 1 });
 vehicleSchema.index({ model: 1 });
 vehicleSchema.index({ category: 1 });

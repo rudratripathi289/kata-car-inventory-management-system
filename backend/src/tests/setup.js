@@ -8,6 +8,7 @@ beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   await mongoose.connect(mongoUri);
+  process.env.JWT_SECRET = 'test_jwt_secret_key_for_testing_only';
 });
 
 // Clear all collections after each test

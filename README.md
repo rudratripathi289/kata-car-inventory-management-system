@@ -5,7 +5,11 @@ AutoVault is a premium, modern, and highly responsive Car Inventory Management S
 ## 🚀 Live Demo
 
 - **Frontend (Vercel):** [https://kata-car-inventory-management-syste-chi.vercel.app/](https://kata-car-inventory-management-syste-chi.vercel.app/)
-- **Backend (Render):** [https://kata-car-inventory-management-system.onrender.com](https://kata-car-inventory-management-system.onrender.com)
+- **Backend (Render):** [https://kata-car-inventory-management-system.onrender.com](https://kata-car-inventory-management-system.onrender.com) \
+Example admin -- Email:admin@example.com \
+                Password: adminpassword123 \
+example customer -- email:rudratripathi289@gmail.com \
+                     password: RATRIPATHI \
 ## 🌟 Features
 
 ### 👤 For Customers:

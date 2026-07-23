@@ -8,6 +8,7 @@ import DashboardPage from '../pages/DashboardPage';
 import DashboardLayout from '../layouts/DashboardLayout';
 import VehiclesPage from '../pages/VehiclesPage';
 import VehicleFormPage from '../pages/VehicleFormPage';
+import VehicleDetailPage from '../pages/VehicleDetailPage';
 
 const TempHome = () => (
   <div className="p-8">
@@ -62,6 +63,16 @@ function AppRoutes() {
           <ProtectedRoute requireAdmin={true}>
             <DashboardLayout>
               <VehicleFormPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/vehicles/:id" 
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <VehicleDetailPage />
             </DashboardLayout>
           </ProtectedRoute>
         } 

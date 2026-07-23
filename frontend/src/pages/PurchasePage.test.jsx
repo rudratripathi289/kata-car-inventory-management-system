@@ -54,7 +54,7 @@ describe('PurchasePage', () => {
     expect(screen.getByText('$25,000.00')).toBeInTheDocument();
   });
 
-  it('handles successful purchase', async () => {
+  it('handles successful purchase with custom quantity', async () => {
     vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'user' } });
     vi.mocked(vehicleService.getVehicleById).mockResolvedValue(mockVehicle);
     vi.mocked(vehicleService.purchaseVehicle).mockResolvedValue({ data: { message: 'Success' } });
@@ -68,10 +68,17 @@ describe('PurchasePage', () => {
       expect(screen.getByRole('button', { name: /confirm purchase/i })).toBeInTheDocument();
     });
 
+    // Change quantity to 2
+    const quantityInput = screen.getByLabelText(/quantity/i);
+    fireEvent.change(quantityInput, { target: { value: '2' } });
+
+    // Verify total price updated to $50,000.00
+    expect(screen.getByText('$50,000.00')).toBeInTheDocument();
+
     fireEvent.click(screen.getByRole('button', { name: /confirm purchase/i }));
 
     await waitFor(() => {
-      expect(vehicleService.purchaseVehicle).toHaveBeenCalledWith('1', 1);
+      expect(vehicleService.purchaseVehicle).toHaveBeenCalledWith('1', 2);
     });
 
     expect(screen.getByText(/purchase successful/i)).toBeInTheDocument();

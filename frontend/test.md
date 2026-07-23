@@ -57,21 +57,21 @@
 
  RUN  v4.1.10 D:/Kata-Car-Inventory-management-system/frontend
 
- ✓ src/components/ProtectedRoute.test.jsx (2 tests) 67ms
- ✓ src/layouts/DashboardLayout.test.jsx (1 test) 89ms
- ✓ src/context/AuthContext.test.jsx (3 tests) 84ms
- ✓ src/pages/ProfilePage.test.jsx (2 tests) 97ms
- ✓ src/pages/DashboardPage.test.jsx (2 tests) 161ms
- ✓ src/pages/RegisterPage.test.jsx (2 tests) 341ms
- ✓ src/pages/LoginPage.test.jsx (3 tests) 371ms
- ✓ src/pages/PurchasePage.test.jsx (3 tests) 306ms
- ✓ src/pages/SettingsPage.test.jsx (3 tests) 370ms
- ✓ src/pages/VehicleDetailPage.test.jsx (6 tests) 376ms
- ✓ src/pages/VehiclesPage.test.jsx (6 tests) 371ms
- ✓ src/pages/VehicleFormPage.test.jsx (2 tests) 387ms
+ ✓ src/components/ProtectedRoute.test.jsx (2 tests) 64ms
+ ✓ src/layouts/DashboardLayout.test.jsx (1 test) 90ms
+ ✓ src/context/AuthContext.test.jsx (3 tests) 114ms
+ ✓ src/pages/ProfilePage.test.jsx (2 tests) 108ms
+ ✓ src/pages/DashboardPage.test.jsx (2 tests) 180ms
+ ✓ src/pages/RegisterPage.test.jsx (2 tests) 337ms
+ ✓ src/pages/LoginPage.test.jsx (3 tests) 344ms
+ ✓ src/pages/PurchasePage.test.jsx (3 tests) 322ms
+ ✓ src/pages/SettingsPage.test.jsx (3 tests) 366ms
+ ✓ src/pages/VehicleDetailPage.test.jsx (6 tests) 366ms
+ ✓ src/pages/VehiclesPage.test.jsx (6 tests) 379ms
+ ✓ src/pages/VehicleFormPage.test.jsx (2 tests) 375ms
 
  Test Files  12 passed (12)
       Tests  35 passed (35)
-   Start at  19:43:34
-   Duration  2.67s (transform 1.89s, setup 2.31s, import 5.01s, tests 3.02s, environment 15.91s)
+   Start at  19:46:56
+   Duration  2.61s (transform 2.17s, setup 2.22s, import 5.11s, tests 3.04s, environment 15.50s)
 ```

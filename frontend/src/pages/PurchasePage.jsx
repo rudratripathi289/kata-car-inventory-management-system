@@ -11,6 +11,7 @@ const PurchasePage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [purchaseSuccess, setPurchaseSuccess] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     fetchVehicle();
@@ -33,7 +34,7 @@ const PurchasePage = () => {
     try {
       setIsPurchasing(true);
       setErrorMsg('');
-      await purchaseVehicle(id, 1); // Purchasing 1 vehicle for now
+      await purchaseVehicle(id, quantity);
       setPurchaseSuccess(true);
     } catch (err) {
       setErrorMsg(err.response?.data?.message || 'Failed to complete purchase');
@@ -90,6 +91,7 @@ const PurchasePage = () => {
   }
 
   const isOutOfStock = vehicle.quantity <= 0;
+  const totalPrice = vehicle.price * quantity;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-12">
@@ -130,10 +132,35 @@ const PurchasePage = () => {
             <div className="mb-4 md:mb-0 text-center md:text-left">
               <h3 className="text-lg font-medium text-gray-900">Order Summary</h3>
               <p className="text-sm text-gray-500 mt-1">VIN: {vehicle.vin}</p>
+              
+              {!isOutOfStock && (
+                <div className="mt-4 flex items-center">
+                  <label htmlFor="quantity" className="text-sm font-medium text-gray-700 mr-3">
+                    Quantity:
+                  </label>
+                  <input
+                    type="number"
+                    id="quantity"
+                    min="1"
+                    max={vehicle.quantity}
+                    value={quantity}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value);
+                      if (!isNaN(val) && val > 0 && val <= vehicle.quantity) {
+                        setQuantity(val);
+                      }
+                    }}
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-20 sm:text-sm border-gray-300 rounded-md p-2 border"
+                  />
+                  <span className="ml-2 text-sm text-gray-500">
+                    ({vehicle.quantity} available)
+                  </span>
+                </div>
+              )}
             </div>
-            <div className="text-center md:text-right">
+            <div className="text-center md:text-right mt-4 md:mt-0">
               <p className="text-sm text-gray-500">Total Price</p>
-              <p className="text-3xl font-bold text-blue-600">${vehicle.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              <p className="text-3xl font-bold text-blue-600">${totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             </div>
           </div>
 
@@ -154,7 +181,7 @@ const PurchasePage = () => {
           <div className="pt-6 flex justify-end">
             <button
               type="button"
-              disabled={isPurchasing || isOutOfStock}
+              disabled={isPurchasing || isOutOfStock || quantity < 1 || quantity > vehicle.quantity}
               onClick={handlePurchase}
               className="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >

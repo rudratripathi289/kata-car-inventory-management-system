@@ -95,10 +95,74 @@ const deleteVehicle = async (req, res, next) => {
   }
 };
 
+// @desc    Search vehicles with filters, pagination, and sorting
+// @route   GET /api/vehicles/search
+// @access  Public
+const searchVehicles = async (req, res, next) => {
+  try {
+    const {
+      make,
+      model,
+      category,
+      minPrice,
+      maxPrice,
+      condition,
+      fuelType,
+      transmission,
+      sortBy = 'createdAt',
+      order = 'desc',
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    // Build filter object
+    const filter = {};
+
+    if (make) filter.make = { $regex: make, $options: 'i' };
+    if (model) filter.model = { $regex: model, $options: 'i' };
+    if (category) filter.category = { $regex: category, $options: 'i' };
+    if (condition) filter.condition = condition;
+    if (fuelType) filter.fuelType = { $regex: fuelType, $options: 'i' };
+    if (transmission) filter.transmission = { $regex: transmission, $options: 'i' };
+
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    // Pagination
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Sort
+    const sortOrder = order === 'asc' ? 1 : -1;
+    const sortObj = { [sortBy]: sortOrder };
+
+    const vehicles = await Vehicle.find(filter)
+      .sort(sortObj)
+      .skip(skip)
+      .limit(limitNum);
+
+    const total = await Vehicle.countDocuments(filter);
+
+    res.json({
+      vehicles,
+      page: pageNum,
+      pages: Math.ceil(total / limitNum),
+      total,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getVehicles,
   getVehicleById,
   createVehicle,
   updateVehicle,
   deleteVehicle,
+  searchVehicles,
 };

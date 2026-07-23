@@ -6,6 +6,7 @@ const {
   createVehicle,
   updateVehicle,
   deleteVehicle,
+  searchVehicles,
 } = require('../controllers/vehicleController');
 const { body } = require('express-validator');
 
@@ -30,6 +31,9 @@ router.route('/')
   .get(getVehicles)
   // TODO: Add auth & admin middleware in Step 10
   .post(vehicleValidation, createVehicle);
+
+// Search route (must be before /:id)
+router.get('/search', searchVehicles);
 
 router.route('/:id')
   .get(getVehicleById)

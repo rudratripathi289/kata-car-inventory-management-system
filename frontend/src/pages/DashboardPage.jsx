@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { getVehicles, searchVehicles } from '../services/vehicleService';
 import { FiBox, FiDollarSign, FiAlertCircle, FiClock, FiArrowRight, FiTrendingUp } from 'react-icons/fi';
 
+let cachedDashboardData = null;
+
 const DashboardPage = () => {
   const { user } = useAuth();
   
@@ -21,6 +23,14 @@ const DashboardPage = () => {
   useEffect(() => {
     setMounted(true);
     const fetchDashboardData = async () => {
+      if (cachedDashboardData) {
+        setMetrics(cachedDashboardData.metrics);
+        setLowStockVehicles(cachedDashboardData.lowStockVehicles);
+        setRecentVehicles(cachedDashboardData.recentVehicles);
+        setLoading(false);
+        return;
+      }
+      
       try {
         setLoading(true);
         
@@ -56,6 +66,16 @@ const DashboardPage = () => {
           order: 'desc' 
         });
         setRecentVehicles(recentResponse.data.vehicles);
+        
+        cachedDashboardData = {
+          metrics: {
+            totalVehicles: totalQuantity,
+            totalValue,
+            lowStockCount: lowStockList.length,
+          },
+          lowStockVehicles: lowStockList,
+          recentVehicles: recentResponse.data.vehicles
+        };
         
       } catch (error) {
         console.error('Error fetching dashboard data:', error);

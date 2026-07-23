@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
-    
+
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
     }
@@ -27,9 +27,10 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Login failed' 
+        error: error.response?.data?.message || (error.request ? 'Network error: Is the backend running?' : 'Login failed') 
       };
     }
   };
@@ -43,9 +44,10 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       return { success: true };
     } catch (error) {
+      console.error('Registration error:', error);
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Registration failed' 
+        error: error.response?.data?.message || (error.request ? 'Network error: Is the backend running?' : 'Registration failed') 
       };
     }
   };

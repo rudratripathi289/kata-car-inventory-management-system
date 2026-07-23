@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 
 import DashboardPage from '../pages/DashboardPage';
 import DashboardLayout from '../layouts/DashboardLayout';
+import VehiclesPage from '../pages/VehiclesPage';
+import VehicleFormPage from '../pages/VehicleFormPage';
 
 const TempHome = () => (
   <div className="p-8">
@@ -30,6 +32,36 @@ function AppRoutes() {
           <ProtectedRoute>
             <DashboardLayout>
               <DashboardPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/vehicles" 
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <VehiclesPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/vehicles/new" 
+        element={
+          <ProtectedRoute requireAdmin={true}>
+            <DashboardLayout>
+              <VehicleFormPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/vehicles/:id/edit" 
+        element={
+          <ProtectedRoute requireAdmin={true}>
+            <DashboardLayout>
+              <VehicleFormPage />
             </DashboardLayout>
           </ProtectedRoute>
         } 

@@ -57,18 +57,19 @@
 
  RUN  v4.1.10 D:/Kata-Car-Inventory-management-system/frontend
 
- ✓ src/pages/DashboardPage.test.jsx (1 test) 41ms
- ✓ src/components/ProtectedRoute.test.jsx (2 tests) 50ms
- ✓ src/layouts/DashboardLayout.test.jsx (1 test) 69ms
- ✓ src/context/AuthContext.test.jsx (3 tests) 76ms
- ✓ src/pages/VehicleDetailPage.test.jsx (3 tests) 128ms
- ✓ src/pages/LoginPage.test.jsx (3 tests) 272ms
- ✓ src/pages/RegisterPage.test.jsx (2 tests) 274ms
- ✓ src/pages/VehiclesPage.test.jsx (4 tests) 230ms
- ✓ src/pages/VehicleFormPage.test.jsx (2 tests) 318ms
+ ✓ src/pages/DashboardPage.test.jsx (1 test) 40ms
+ ✓ src/components/ProtectedRoute.test.jsx (2 tests) 44ms
+ ✓ src/layouts/DashboardLayout.test.jsx (1 test) 82ms
+ ✓ src/context/AuthContext.test.jsx (3 tests) 87ms
+ ✓ src/pages/VehicleDetailPage.test.jsx (3 tests) 137ms
+ ✓ src/pages/LoginPage.test.jsx (3 tests) 278ms
+ ✓ src/pages/RegisterPage.test.jsx (2 tests) 302ms
+ ✓ src/pages/VehiclesPage.test.jsx (4 tests) 236ms
+ ✓ src/pages/PurchasePage.test.jsx (3 tests) 274ms
+ ✓ src/pages/VehicleFormPage.test.jsx (2 tests) 303ms
 
- Test Files  9 passed (9)
-      Tests  21 passed (21)
-   Start at  18:29:08
-   Duration  2.16s (transform 1.01s, setup 1.50s, import 2.39s, tests 1.46s, environment 9.69s)
+ Test Files  10 passed (10)
+      Tests  24 passed (24)
+   Start at  18:32:38
+   Duration  2.23s (transform 1.10s, setup 1.60s, import 2.94s, tests 1.78s, environment 11.41s)
 ```

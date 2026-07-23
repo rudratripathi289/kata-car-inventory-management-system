@@ -9,6 +9,7 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import VehiclesPage from '../pages/VehiclesPage';
 import VehicleFormPage from '../pages/VehicleFormPage';
 import VehicleDetailPage from '../pages/VehicleDetailPage';
+import PurchasePage from '../pages/PurchasePage';
 
 const TempHome = () => (
   <div className="p-8">
@@ -73,6 +74,16 @@ function AppRoutes() {
           <ProtectedRoute>
             <DashboardLayout>
               <VehicleDetailPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/vehicles/:id/purchase" 
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <PurchasePage />
             </DashboardLayout>
           </ProtectedRoute>
         } 

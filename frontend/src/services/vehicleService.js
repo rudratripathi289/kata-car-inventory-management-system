@@ -7,3 +7,4 @@ export const createVehicle = (vehicleData) => api.post('/vehicles', vehicleData)
 export const updateVehicle = (id, vehicleData) => api.put(`/vehicles/${id}`, vehicleData);
 export const deleteVehicle = (id) => api.delete(`/vehicles/${id}`);
 export const restockVehicle = (id, quantity) => api.post(`/vehicles/${id}/restock`, { quantity });
+export const purchaseVehicle = (id, quantity) => api.post(`/vehicles/${id}/purchase`, { quantity });

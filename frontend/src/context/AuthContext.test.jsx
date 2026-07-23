@@ -36,7 +36,7 @@ describe('AuthContext', () => {
 
   it('handles login successfully', async () => {
     authService.loginUser.mockResolvedValue({
-      data: { token: 'fake-token', user: { firstName: 'John' } }
+      data: { token: 'fake-token', firstName: 'John' }
     });
 
     render(

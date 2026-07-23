@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiList, FiPlusSquare, FiSettings } from 'react-icons/fi';
+import { FiHome, FiList, FiPlusSquare, FiSettings, FiUser } from 'react-icons/fi';
 
 const Sidebar = () => {
   const links = [
     { name: 'Dashboard', path: '/dashboard', icon: FiHome },
     { name: 'Inventory', path: '/vehicles', icon: FiList },
     { name: 'Add Vehicle', path: '/vehicles/new', icon: FiPlusSquare },
+    { name: 'My Profile', path: '/profile', icon: FiUser },
     { name: 'Settings', path: '/settings', icon: FiSettings },
   ];
 

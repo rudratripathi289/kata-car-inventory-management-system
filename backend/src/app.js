@@ -9,8 +9,11 @@ app.use(express.json());
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
+const purchaseRoutes = require('./routes/purchaseRoutes');
+
 app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/purchases', purchaseRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

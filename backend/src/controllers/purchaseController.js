@@ -51,6 +51,22 @@ const purchaseVehicle = async (req, res, next) => {
   }
 };
 
+// @desc    Get logged in user purchases
+// @route   GET /api/purchases/my-purchases
+// @access  Private
+const getMyPurchases = async (req, res, next) => {
+  try {
+    const purchases = await Purchase.find({ buyerId: req.user._id })
+      .populate('vehicleId', 'make model year price')
+      .sort({ purchasedAt: -1 });
+      
+    res.json(purchases);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   purchaseVehicle,
+  getMyPurchases,
 };

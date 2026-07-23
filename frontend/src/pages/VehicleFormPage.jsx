@@ -9,13 +9,12 @@ const VehicleFormPage = () => {
   const isEditMode = !!id;
   const navigate = useNavigate();
   
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
       condition: 'New',
       category: 'Sedan',
       transmission: 'Automatic',
       fuelType: 'Gasoline',
-      features: []
     }
   });
 
@@ -33,14 +32,7 @@ const VehicleFormPage = () => {
     try {
       setLoading(true);
       const response = await getVehicleById(id);
-      
-      // Parse features array to string for text area
-      const vehicleData = {
-        ...response.data,
-        features: response.data.features ? response.data.features.join(', ') : ''
-      };
-      
-      reset(vehicleData);
+      reset(response.data);
     } catch (err) {
       setErrorMsg('Failed to load vehicle details');
       console.error(err);
@@ -54,15 +46,12 @@ const VehicleFormPage = () => {
     setErrorMsg('');
     
     try {
-      // Process features string back to array
       const processedData = {
         ...data,
         year: parseInt(data.year, 10),
         price: parseFloat(data.price),
         quantity: parseInt(data.quantity, 10),
-        features: typeof data.features === 'string' 
-          ? data.features.split(',').map(f => f.trim()).filter(f => f)
-          : data.features
+        mileage: parseInt(data.mileage, 10),
       };
 
       if (isEditMode) {
@@ -89,7 +78,7 @@ const VehicleFormPage = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 pb-12">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <button 
@@ -102,6 +91,11 @@ const VehicleFormPage = () => {
             {isEditMode ? 'Edit Vehicle' : 'Add New Vehicle'}
           </h1>
         </div>
+        {isEditMode && (
+          <div className="text-sm text-gray-500">
+            ID: {id}
+          </div>
+        )}
       </div>
 
       <div className="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
@@ -115,8 +109,20 @@ const VehicleFormPage = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             
+            {/* Row 1: VIN, Make, Model */}
             <div className="sm:col-span-2">
-              <label htmlFor="make" className="block text-sm font-medium text-gray-700">Make</label>
+              <label htmlFor="vin" className="block text-sm font-medium text-gray-700">VIN *</label>
+              <input
+                type="text"
+                id="vin"
+                {...register('vin', { required: 'VIN is required' })}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm uppercase"
+              />
+              {errors.vin && <p className="mt-1 text-sm text-red-600">{errors.vin.message}</p>}
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="make" className="block text-sm font-medium text-gray-700">Make *</label>
               <input
                 type="text"
                 id="make"
@@ -127,7 +133,7 @@ const VehicleFormPage = () => {
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="model" className="block text-sm font-medium text-gray-700">Model</label>
+              <label htmlFor="model" className="block text-sm font-medium text-gray-700">Model *</label>
               <input
                 type="text"
                 id="model"
@@ -137,8 +143,9 @@ const VehicleFormPage = () => {
               {errors.model && <p className="mt-1 text-sm text-red-600">{errors.model.message}</p>}
             </div>
 
+            {/* Row 2: Year, Category, Condition */}
             <div className="sm:col-span-2">
-              <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year</label>
+              <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year *</label>
               <input
                 type="number"
                 id="year"
@@ -153,63 +160,10 @@ const VehicleFormPage = () => {
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price ($)</label>
-              <input
-                type="number"
-                step="0.01"
-                id="price"
-                {...register('price', { 
-                  required: 'Price is required',
-                  min: { value: 0, message: 'Price must be positive' }
-                })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>}
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Quantity</label>
-              <input
-                type="number"
-                id="quantity"
-                {...register('quantity', { 
-                  required: 'Quantity is required',
-                  min: { value: 0, message: 'Quantity cannot be negative' }
-                })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              {errors.quantity && <p className="mt-1 text-sm text-red-600">{errors.quantity.message}</p>}
-            </div>
-
-            <div className="sm:col-span-2">
-              <label htmlFor="vin" className="block text-sm font-medium text-gray-700">VIN</label>
-              <input
-                type="text"
-                id="vin"
-                {...register('vin', { required: 'VIN is required' })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              {errors.vin && <p className="mt-1 text-sm text-red-600">{errors.vin.message}</p>}
-            </div>
-
-            <div className="sm:col-span-3">
-              <label htmlFor="condition" className="block text-sm font-medium text-gray-700">Condition</label>
-              <select
-                id="condition"
-                {...register('condition')}
-                className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              >
-                <option value="New">New</option>
-                <option value="Used">Used</option>
-                <option value="Certified Pre-Owned">Certified Pre-Owned</option>
-              </select>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category *</label>
               <select
                 id="category"
-                {...register('category')}
+                {...register('category', { required: 'Category is required' })}
                 className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               >
                 <option value="Sedan">Sedan</option>
@@ -223,25 +177,135 @@ const VehicleFormPage = () => {
               </select>
             </div>
 
-            <div className="sm:col-span-6">
-              <label htmlFor="features" className="block text-sm font-medium text-gray-700">
-                Features (comma separated)
-              </label>
-              <textarea
-                id="features"
-                rows={3}
-                {...register('features')}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Bluetooth, Backup Camera, Leather Seats"
-              />
+            <div className="sm:col-span-2">
+              <label htmlFor="condition" className="block text-sm font-medium text-gray-700">Condition *</label>
+              <select
+                id="condition"
+                {...register('condition', { required: 'Condition is required' })}
+                className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              >
+                <option value="New">New</option>
+                <option value="Used">Used</option>
+              </select>
             </div>
-            
+
+            {/* Row 3: Fuel Type, Transmission, Engine */}
+            <div className="sm:col-span-2">
+              <label htmlFor="fuelType" className="block text-sm font-medium text-gray-700">Fuel Type *</label>
+              <select
+                id="fuelType"
+                {...register('fuelType', { required: 'Fuel type is required' })}
+                className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              >
+                <option value="Gasoline">Gasoline</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="transmission" className="block text-sm font-medium text-gray-700">Transmission *</label>
+              <select
+                id="transmission"
+                {...register('transmission', { required: 'Transmission is required' })}
+                className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              >
+                <option value="Automatic">Automatic</option>
+                <option value="Manual">Manual</option>
+                <option value="CVT">CVT</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="engine" className="block text-sm font-medium text-gray-700">Engine *</label>
+              <input
+                type="text"
+                id="engine"
+                {...register('engine', { required: 'Engine is required' })}
+                placeholder="e.g. 2.0L 4-Cylinder"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              {errors.engine && <p className="mt-1 text-sm text-red-600">{errors.engine.message}</p>}
+            </div>
+
+            {/* Row 4: Color, Mileage */}
+            <div className="sm:col-span-3">
+              <label htmlFor="color" className="block text-sm font-medium text-gray-700">Color *</label>
+              <input
+                type="text"
+                id="color"
+                {...register('color', { required: 'Color is required' })}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              {errors.color && <p className="mt-1 text-sm text-red-600">{errors.color.message}</p>}
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="mileage" className="block text-sm font-medium text-gray-700">Mileage *</label>
+              <input
+                type="number"
+                id="mileage"
+                {...register('mileage', { 
+                  required: 'Mileage is required',
+                  min: { value: 0, message: 'Mileage cannot be negative' }
+                })}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              {errors.mileage && <p className="mt-1 text-sm text-red-600">{errors.mileage.message}</p>}
+            </div>
+
+            {/* Row 5: Price, Quantity */}
+            <div className="sm:col-span-3">
+              <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price ($) *</label>
+              <input
+                type="number"
+                step="0.01"
+                id="price"
+                {...register('price', { 
+                  required: 'Price is required',
+                  min: { value: 0, message: 'Price must be positive' }
+                })}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>}
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Quantity in Stock *</label>
+              <input
+                type="number"
+                id="quantity"
+                {...register('quantity', { 
+                  required: 'Quantity is required',
+                  min: { value: 0, message: 'Quantity cannot be negative' }
+                })}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              {errors.quantity && <p className="mt-1 text-sm text-red-600">{errors.quantity.message}</p>}
+            </div>
+
+            {/* Row 6: Image URL */}
             <div className="sm:col-span-6">
               <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">Image URL</label>
               <input
                 type="url"
                 id="imageUrl"
                 {...register('imageUrl')}
+                placeholder="https://example.com/car.jpg"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+
+            {/* Row 7: Description */}
+            <div className="sm:col-span-6">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                Description
+              </label>
+              <textarea
+                id="description"
+                rows={4}
+                {...register('description')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </div>

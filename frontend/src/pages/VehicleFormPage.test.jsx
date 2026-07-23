@@ -35,7 +35,7 @@ describe('VehicleFormPage', () => {
     renderWithRouter();
     
     expect(screen.getByText('Add New Vehicle')).toBeInTheDocument();
-    expect(screen.getByLabelText(/make/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/make \*/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /save vehicle/i })).toBeInTheDocument();
   });
 
@@ -47,23 +47,29 @@ describe('VehicleFormPage', () => {
 
     renderWithRouter();
 
-    fireEvent.change(screen.getByLabelText(/make/i), { target: { value: 'Honda' } });
-    fireEvent.change(screen.getByLabelText(/model/i), { target: { value: 'Civic' } });
-    fireEvent.change(screen.getByLabelText(/year/i), { target: { value: '2024' } });
+    fireEvent.change(screen.getByLabelText(/vin \*/i), { target: { value: '1HGCM82633A004' } });
+    fireEvent.change(screen.getByLabelText(/make \*/i), { target: { value: 'Honda' } });
+    fireEvent.change(screen.getByLabelText(/model \*/i), { target: { value: 'Civic' } });
+    fireEvent.change(screen.getByLabelText(/year \*/i), { target: { value: '2024' } });
     fireEvent.change(screen.getByLabelText(/price/i), { target: { value: '22000' } });
     fireEvent.change(screen.getByLabelText(/quantity/i), { target: { value: '10' } });
-    fireEvent.change(screen.getByLabelText(/vin/i), { target: { value: '1HGCM82633A004' } });
+    fireEvent.change(screen.getByLabelText(/color \*/i), { target: { value: 'Red' } });
+    fireEvent.change(screen.getByLabelText(/mileage \*/i), { target: { value: '0' } });
+    fireEvent.change(screen.getByLabelText(/engine \*/i), { target: { value: '2.0L' } });
     
     fireEvent.click(screen.getByRole('button', { name: /save vehicle/i }));
 
     await waitFor(() => {
       expect(vehicleService.createVehicle).toHaveBeenCalledWith(expect.objectContaining({
+        vin: '1HGCM82633A004',
         make: 'Honda',
         model: 'Civic',
         year: 2024,
         price: 22000,
         quantity: 10,
-        vin: '1HGCM82633A004'
+        color: 'Red',
+        mileage: 0,
+        engine: '2.0L'
       }));
     });
 

@@ -15,6 +15,9 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'API is running' });
 });
 
-// Centralized error handling middleware will be added here
+// Error handling middleware
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+app.use(notFound);
+app.use(errorHandler);
 
 module.exports = app;

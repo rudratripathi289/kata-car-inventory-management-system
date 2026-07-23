@@ -9,6 +9,8 @@ const {
   searchVehicles,
 } = require('../controllers/vehicleController');
 const { body } = require('express-validator');
+const protect = require('../middleware/authMiddleware');
+const admin = require('../middleware/adminMiddleware');
 
 // Validation middleware for creating/updating a vehicle
 const vehicleValidation = [
@@ -29,17 +31,14 @@ const vehicleValidation = [
 
 router.route('/')
   .get(getVehicles)
-  // TODO: Add auth & admin middleware in Step 10
-  .post(vehicleValidation, createVehicle);
+  .post(protect, admin, vehicleValidation, createVehicle);
 
 // Search route (must be before /:id)
 router.get('/search', searchVehicles);
 
 router.route('/:id')
   .get(getVehicleById)
-  // TODO: Add auth & admin middleware in Step 10
-  .put(vehicleValidation, updateVehicle)
-  // TODO: Add auth & admin middleware in Step 10
-  .delete(deleteVehicle);
+  .put(protect, admin, vehicleValidation, updateVehicle)
+  .delete(protect, admin, deleteVehicle);
 
 module.exports = router;

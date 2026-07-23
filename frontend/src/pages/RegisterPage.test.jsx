@@ -62,6 +62,6 @@ describe('RegisterPage', () => {
       });
     });
     
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
   });
 });

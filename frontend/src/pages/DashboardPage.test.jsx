@@ -42,7 +42,7 @@ describe('DashboardPage', () => {
       // Welcome message
       expect(screen.getByText(/Welcome back, Admin/i)).toBeInTheDocument();
       // Total Vehicles: 5 + 1 + 0 = 6
-      expect(screen.getByText('6')).toBeInTheDocument();
+      expect(screen.getByText('6 Vehicles')).toBeInTheDocument();
       // Total Value: (25000 * 5) + (28000 * 1) + (35000 * 0) = 125000 + 28000 = 153000
       expect(screen.getByText('$153,000')).toBeInTheDocument();
       // Low Stock items (quantity < 3): Honda (1) and Ford (0) -> 2 items
@@ -71,7 +71,7 @@ describe('DashboardPage', () => {
     await waitFor(() => {
       expect(screen.getByText(/Welcome back, Customer/i)).toBeInTheDocument();
       // Available Vehicles: Toyota (5) + Honda (1) = 6
-      expect(screen.getByText('6')).toBeInTheDocument();
+      expect(screen.getByText('6 Vehicles')).toBeInTheDocument();
     });
 
     // Customers should NOT see Total Value or Low Stock metrics

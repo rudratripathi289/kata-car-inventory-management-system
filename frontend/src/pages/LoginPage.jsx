@@ -22,7 +22,7 @@ const LoginPage = () => {
     const result = await login(data);
     
     if (result.success) {
-      navigate('/');
+      navigate('/dashboard');
     } else {
       setErrorMsg(result.error || 'Failed to login');
       setIsSubmitting(false);

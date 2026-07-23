@@ -50,7 +50,7 @@ describe('LoginPage', () => {
       expect(mockLogin).toHaveBeenCalledWith({ email: 'test@example.com', password: 'password123' });
     });
     
-    expect(mockNavigate).toHaveBeenCalledWith('/');
+    expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
   });
 
   it('displays error message on failed login', async () => {

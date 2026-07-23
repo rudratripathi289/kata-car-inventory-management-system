@@ -38,7 +38,7 @@ const RegisterPage = () => {
     const result = await registerUser(data);
     
     if (result.success) {
-      navigate('/');
+      navigate('/dashboard');
     } else {
       setErrorMsg(result.error || 'Failed to register');
       setIsSubmitting(false);

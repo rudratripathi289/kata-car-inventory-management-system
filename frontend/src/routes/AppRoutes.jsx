@@ -11,6 +11,7 @@ import VehicleFormPage from '../pages/VehicleFormPage';
 import VehicleDetailPage from '../pages/VehicleDetailPage';
 import PurchasePage from '../pages/PurchasePage';
 import ProfilePage from '../pages/ProfilePage';
+import SettingsPage from '../pages/SettingsPage';
 
 const TempHome = () => (
   <div className="p-8">
@@ -95,6 +96,16 @@ function AppRoutes() {
           <ProtectedRoute>
             <DashboardLayout>
               <ProfilePage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/settings" 
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <SettingsPage />
             </DashboardLayout>
           </ProtectedRoute>
         } 

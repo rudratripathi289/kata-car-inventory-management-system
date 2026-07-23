@@ -52,39 +52,21 @@ const purchaseVehicle = async (req, res, next) => {
 };
 
 // @desc    Get logged in user purchases
-// @route   GET /api/purchases/my-purchases
+// @route   GET /api/purchases
 // @access  Private
 const getMyPurchases = async (req, res, next) => {
   try {
-    const mongoose = require('mongoose');
-    
-    // Fetch directly from the purchases collection to avoid schema casting issues
-    const rawPurchases = await mongoose.connection.db.collection('purchases')
-      .find({
-        $or: [
-          { buyerId: req.user._id },
-          { buyerId: req.user._id.toString() }
-        ]
-      })
-      .sort({ purchasedAt: -1, createdAt: -1 })
-      .toArray();
+    const userId = req.user._id;
 
-    // Populate vehicle details manually since we bypassed Mongoose
-    const purchases = await Promise.all(rawPurchases.map(async (p) => {
-      let vehicle = null;
-      if (p.vehicleId) {
-        try {
-          vehicle = await Vehicle.findById(p.vehicleId).select('make model year price');
-        } catch(e) {}
-      }
-      return {
-        ...p,
-        vehicleId: vehicle
-      };
-    }));
-      
+    // Use Mongoose to query purchases for this user
+    const purchases = await Purchase.find({ buyerId: userId })
+      .populate('vehicleId', 'make model year price')
+      .sort({ purchasedAt: -1 })
+      .lean();
+
     res.json(purchases);
   } catch (error) {
+    console.error('[getMyPurchases] ERROR:', error);
     next(error);
   }
 };

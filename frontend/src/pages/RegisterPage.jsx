@@ -92,6 +92,24 @@ const RegisterPage = () => {
             </div>
 
             <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <input
+                  id="phone"
+                  type="text"
+                  {...register('phone', { required: 'Phone number is required' })}
+                  className={`block w-full px-3 py-2 border ${errors.phone ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'} rounded-md shadow-sm sm:text-sm`}
+                  placeholder="(555) 555-5555"
+                />
+              </div>
+              {errors.phone && (
+                <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>
+              )}
+            </div>
+
+            <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>

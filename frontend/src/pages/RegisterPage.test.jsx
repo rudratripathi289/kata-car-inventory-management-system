@@ -27,6 +27,7 @@ describe('RegisterPage', () => {
 
     expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/phone number/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/^password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
@@ -46,6 +47,7 @@ describe('RegisterPage', () => {
 
     fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
     fireEvent.change(screen.getByLabelText(/last name/i), { target: { value: 'Doe' } });
+    fireEvent.change(screen.getByLabelText(/phone number/i), { target: { value: '1234567890' } });
     fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByLabelText(/^password/i), { target: { value: 'password123' } });
     fireEvent.click(screen.getByRole('button', { name: /create account/i }));
@@ -54,6 +56,7 @@ describe('RegisterPage', () => {
       expect(mockRegister).toHaveBeenCalledWith({ 
         firstName: 'John',
         lastName: 'Doe',
+        phone: '1234567890',
         email: 'test@example.com', 
         password: 'password123' 
       });

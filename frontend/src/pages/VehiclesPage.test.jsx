@@ -34,8 +34,9 @@ describe('VehiclesPage', () => {
         vehicles: [
           { _id: '1', make: 'Toyota', model: 'Camry', year: 2023, price: 25000, quantity: 5, condition: 'New' }
         ],
-        pages: 1,
-        total: 1
+        pages: 2,
+        page: 1,
+        total: 15
       }
     };
     
@@ -52,6 +53,42 @@ describe('VehiclesPage', () => {
     });
     expect(screen.getByText('$25000')).toBeInTheDocument();
     expect(screen.queryByText(/loading vehicles/i)).not.toBeInTheDocument();
+    
+    // Check pagination renders
+    expect(screen.getByText(/showing/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
+  });
+
+  it('handles pagination navigation', async () => {
+    vi.mocked(AuthContext.useAuth).mockReturnValue({ user: { role: 'user' } });
+    
+    const mockDataPage1 = {
+      data: { vehicles: [{ _id: '1', make: 'Toyota', model: 'Camry', year: 2023, price: 25000, quantity: 5, condition: 'New' }], pages: 2, page: 1, total: 15 }
+    };
+    
+    const mockDataPage2 = {
+      data: { vehicles: [{ _id: '2', make: 'Honda', model: 'Accord', year: 2024, price: 28000, quantity: 2, condition: 'New' }], pages: 2, page: 2, total: 15 }
+    };
+    
+    vi.mocked(vehicleService.searchVehicles).mockResolvedValueOnce(mockDataPage1).mockResolvedValueOnce(mockDataPage2);
+
+    render(
+      <MemoryRouter>
+        <VehiclesPage />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Toyota Camry')).toBeInTheDocument();
+    });
+
+    const nextButton = screen.getByRole('button', { name: /next/i });
+    const { fireEvent } = require('@testing-library/react');
+    fireEvent.click(nextButton);
+
+    await waitFor(() => {
+      expect(vehicleService.searchVehicles).toHaveBeenCalledWith({ make: '', page: 2, limit: 10 });
+    });
   });
 
   it('shows add vehicle button for admins', async () => {
